@@ -54,4 +54,8 @@ if filereadable("/etc/vim/vimrc.local")
 endif
 
 colorscheme desert
+set number
+
+nmap <C-K> <C-W>k
+nmap <C-J> <C-W>j
 
