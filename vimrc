@@ -59,3 +59,5 @@ set number
 nmap <C-K> <C-W>k
 nmap <C-J> <C-W>j
 
+set statusline+=%F
+set laststatus=2
