@@ -103,6 +103,7 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 alias apt-upgrade='sudo apt-get update && sudo apt-get upgrade'
+alias py='python'
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
