@@ -9,6 +9,24 @@
 " properly set to work with the Vim-related packages available in Debian.
 runtime! debian.vim
 
+"Vundle settings
+"git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+":PluginInstall
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" This is the Vundle package, which can be found on GitHub.
+" " For GitHub repos, you specify plugins using the
+" " 'user/repository' format
+Plugin 'gmarik/vundle'
+
+"Jedi-Vim autocompleter
+Plugin 'davidhalter/jedi-vim'
+
+"Supertab
+Plugin 'ervandew/supertab'
+
 " Uncomment the next line to make Vim more Vi-compatible
 " NOTE: debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
 " options, so any other options should be set AFTER setting 'compatible'.
@@ -31,12 +49,6 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
-" Uncomment the following to have Vim load indentation rules and plugins
-" according to the detected filetype.
-if has("autocmd")
-  filetype plugin indent on
-endif
-
 " The following are commented out as they cause vim to behave a lot
 " differently from regular Vi. They are highly recommended though.
 set showcmd		" Show (partial) command in status line.
@@ -47,6 +59,7 @@ set incsearch		" Incremental search
 "set autowrite		" Automatically save before commands like :next and :make
 set hidden		" Hide buffers when they are abandoned
 "set mouse=a		" Enable mouse usage (all modes)
+set completeopt=menuone,longest
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
@@ -67,3 +80,10 @@ set foldmethod=indent   "fold based on indent
 set foldnestmax=10      "deepest fold is 10 levels
 set nofoldenable        "dont fold by default
 set foldlevel=1         "this is just what i use
+
+"Supertab completion settings
+let g:SuperTabDefaultCompletionType = "context"
+
+"Jedi-vim settings
+let g:jedi#use_tabs_not_buffers = 0
+
