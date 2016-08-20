@@ -11,6 +11,9 @@ Plugin 'tpope/vim-fugitive'
 "filesystem
 Plugin 'kien/ctrlp.vim'
 
+"python folding
+Plugin 'tmhedberg/SimpylFold'
+
 "python sytax checker
 Plugin 'nvie/vim-flake8'
 Plugin 'vim-scripts/Pydiction'
@@ -110,3 +113,9 @@ set backspace=indent,eol,start
 
 "js stuff"
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_import = 0
