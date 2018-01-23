@@ -1,121 +1,126 @@
-"vundle
-set nocompatible
-filetype off
+set nocompatible              " required
+filetype off                  " required
+syntax on
 
+" UI Config
+set showcmd             " show command in bottom bar
+set wildmenu            " visual autocomplete for command menu
+set lazyredraw          " redraw only when we need to.
+set showmatch           " highlight matching [{()}]
+
+" Searching
+set incsearch           " search as characters are entered
+set hlsearch            " highlight matches
+" turn off search highlight
+let mapleader = ","
+nnoremap <leader><space> :nohlsearch<CR>
+
+" Movement
+" move vertically by visual line
+nnoremap j gj
+nnoremap k gk
+
+" move to beginning/end of line
+nnoremap B ^
+nnoremap E $
+
+" $/^ doesn't do anything
+nnoremap $ <nop>
+nnoremap ^ <nop>
+
+" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'VundleVim/Vundle.vim'
-"git interface
-Plugin 'tpope/vim-fugitive'
-"filesystem
-Plugin 'kien/ctrlp.vim'
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
-"python folding
-Plugin 'tmhedberg/SimpylFold'
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
 
-"python sytax checker
-Plugin 'nvie/vim-flake8'
-Plugin 'vim-scripts/Pydiction'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'scrooloose/syntastic'
+" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 
-"auto-completion stuff
-"Plugin 'klen/python-mode'
-Plugin 'Valloric/YouCompleteMe'
-"Plugin 'davidhalter/jedi-vim'
-"Plugin 'ervandew/supertab'
-
-"Colors!!!
-Plugin 'altercation/vim-colors-solarized'
+"Plugin 'Valloric/YouCompleteMe'
+"Plugin 'scrooloose/syntastic'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'w0rp/ale'
 Plugin 'jnurmine/Zenburn'
+Plugin 'sjl/badwolf'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'tpope/vim-fugitive'
+Plugin 'pearofducks/ansible-vim'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'fatih/vim-go'
 
-call vundle#end()
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
 
-filetype plugin indent on    " enables filetype detection
-
-"autocomplete
 let g:ycm_autoclose_preview_window_after_completion=1
 
-"pydiction
-let g:pydiction_location = '/root/.vim/bundle/Pydiction/complete-dict'
+if has('gui_running')
+  set background=dark
+  colorscheme solarized
+else
+  colorscheme zenburn
+endif
 
-"custom keys
-let mapleader=" "
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-"
-call togglebg#map("<F5>")
-"colorscheme zenburn
-"set guifont=Monaco:h14
-
-
-"I don't like swap files
-set noswapfile
-
-"turn on numbering
 set nu
 
-"python with virtualenv support
-python3 << EOF
-import os.path
-import sys
-import vim
-if 'VIRTUA_ENV' in os.environ:
-  project_base_dir = os.environ['VIRTUAL_ENV']
-  sys.path.insert(0, project_base_dir)
-  activate_this = os.path.join(project_base_dir,'bin/activate_this.py')
-  execfile(activate_this, dict(__file__=activate_this))
-EOF
+" Prettify JSON files
+autocmd BufRead,BufNewFile *.json set filetype=json
+" autocmd Syntax json sou ~/.vim/syntax/json.vim
 
-"it would be nice to set tag files by the active virtualenv here
-":set tags=~/mytags "tags for ctags and taglist
-"omnicomplete
-autocmd FileType python set omnifunc=pythoncomplete#Complete
+" Prettify Vagrantfile
+autocmd BufRead,BufNewFile Vagrantfile set filetype=ruby
 
-"------------Start Python PEP 8 stuff----------------
-" Number of spaces that a pre-existing tab is equal to.
-au BufRead,BufNewFile *py,*pyw,*.c,*.h set tabstop=4
+" In Ruby files, use 2 spaces instead of 4 for tabs
+autocmd FileType ruby setlocal sw=2 ts=2 sts=2
+ 
+ " Yaml indents
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType yml setlocal ts=2 sts=2 sw=2 expandtab
 
-"spaces for indents
-au BufRead,BufNewFile *.py,*pyw set shiftwidth=4
-au BufRead,BufNewFile *.py,*.pyw set expandtab
-au BufRead,BufNewFile *.py set softtabstop=4
+ " UltiSnips trigger config
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 
-" Use the below highlight group when displaying bad whitespace is desired.
-highlight BadWhitespace ctermbg=red guibg=red
+" Ansible highliting
+autocmd BufRead,BufNewFile ~/*/ansible*/*.yaml set ft=ansible
+autocmd BufRead,BufNewFile ~/*/ansible*/*.yml set ft=ansible
+autocmd BufRead,BufNewFile ~/*/ansible*/hosts set ft=ansible_hosts
 
-" Display tabs at the beginning of a line in Python mode as bad.
-au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
-" Make trailing whitespace be flagged as bad.
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+" Syntastic options
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
-" Wrap text after a certain number of characters
-au BufRead,BufNewFile *.py,*.pyw, set textwidth=100
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 1
+"let g:syntastic_yaml_checkers = ['yamllint']
+let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'goimports', 'structcheck', 'errcheck', 'gosimple', 'unconvert', 'dupl']
+let g:go_metalinter_autosave = 1
 
-" Use UNIX (\n) line endings.
-au BufNewFile *.py,*.pyw,*.c,*.h set fileformat=unix
+"ALE fixers
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\   'python': ['autopep8', 'add_blank_lines_for_python_control_statements', 'trim_whitespace'],
+\}
+let g:airline#extensions#ale#enabled = 1
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
-" Set the default file encoding to UTF-8:
-set encoding=utf-8
+"vim-airline
+"let g:airline_solarized_bg='dark'
+let g:airline_theme='base16_monokai'
 
-" For full syntax highlighting:
-let python_highlight_all=1
-syntax on
-
-" Keep indentation level from previous line:
-autocmd FileType python set autoindent
-
-" make backspaces more powerfull
-set backspace=indent,eol,start
-
-
-"----------Stop python PEP 8 stuff--------------
-
-"js stuff"
-autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
-
-set foldmethod=indent
-set foldlevel=99
-nnoremap <space> za
-let g:SimpylFold_docstring_preview = 1
-let g:SimpylFold_fold_import = 0
+"tabs to spaces
+set tabstop=4
+set shiftwidth=4
+set expandtab
